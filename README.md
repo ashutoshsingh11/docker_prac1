@@ -3,7 +3,7 @@
 ## Quick Start
 
 ```bash
-docker compose up --build
+docker compose up --build 
 ```
 
 Then open → http://localhost:5173
