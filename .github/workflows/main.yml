@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             # Navigate to project folder
-            cd ~/docker-hello
+            cd ~/docker_prac1
 
             # Pull latest code from main
             git pull origin main
