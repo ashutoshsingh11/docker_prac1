@@ -1,4 +1,4 @@
-# Docker Hello World — Node + Vite + React
+# Docker Hello World — Node + Vite + React 
 
 ## Quick Start
 
