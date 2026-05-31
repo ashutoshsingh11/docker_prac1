@@ -1,27 +1,36 @@
-version: '3.9'
+name: Deploy to EC2
 
-services:
-  # ── Backend: Node/Express API ──────────────────────────
-  backend:
-    build: ./backend          # Build image from backend/Dockerfile
-    container_name: backend
-    ports:
-      - "3001:3001"           # host:container port mapping
-    networks:
-      - app-network
+# Triggers on every push to main branch
+on:
+  push:
+    branches:
+      - main
 
-  # ── Frontend: Vite + React ─────────────────────────────
-  frontend:
-    build: ./frontend         # Build image from frontend/Dockerfile
-    container_name: frontend
-    ports:
-      - "5173:5173"           # host:container port mapping
-    depends_on:
-      - backend               # Start backend first
-    networks:
-      - app-network
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-# Shared network so containers can talk to each other by name
-networks:
-  app-network:
-    driver: bridge
+    steps:
+      # Step 1 — Checkout latest code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2 — SSH into EC2 and deploy
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            # Navigate to project folder
+            cd ~/docker-hello
+
+            # Pull latest code from main
+            git pull origin main
+
+            # Rebuild and restart containers
+            docker compose up --build -d
+
+            # Remove old unused images (keeps EC2 disk clean)
+            docker image prune -f
