@@ -1,6 +1,6 @@
 # Docker Hello World — Node + Vite + React 
 
-## Quick Start
+## Quick Start 
 
 ```bash
 docker compose up --build 
